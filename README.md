@@ -43,10 +43,10 @@ This secret value is never displayed again after you leave this page. Please sav
 
 1.	PowerShell scripts prompts to end the following params
 	```
-	[Parameter(Mandatory=$true)]$ResourceGroup, --> Name of the ResourceGroup your "Azure Sentinel and LA WorkSpace"
-    [Parameter(Mandatory=$true)]$Workspace,   --> Azure LA WorkSpace Name
-	[Parameter(Mandatory=$true)]$ClientID, --> AAD App ClientID
-    [Parameter(Mandatory=$true)]$ClientSecret, --> AAD App ClientSecret
-	[Parameter(Mandatory=$true)]$DomainName, --> Your Domain Name like "Contoso"
-	[Parameter(Mandatory=$true)]$TenantGUID --> AAD App TenantGUID
+	ResourceGroup, --> Name of the ResourceGroup your "Azure Sentinel and LA WorkSpace"
+        Workspace,   --> Azure LA WorkSpace Name
+	ClientID, --> AAD App ClientID
+        ClientSecret, --> AAD App ClientSecret
+	DomainName, --> Your Domain Name like "Contoso"
+	TenantGUID --> AAD App TenantGUID
 	```
