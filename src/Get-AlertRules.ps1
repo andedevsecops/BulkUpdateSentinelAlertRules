@@ -65,24 +65,30 @@ $alertRules = $alertRules.content | ConvertFrom-Json
 foreach ($alertRule in $alertRules.value){
     if ($alertRule.properties.displayName.StartsWith("(AUTO DISABLED)"))
     {     
-        $connectorBody = @{}
-		$connectorBody | Add-Member -NotePropertyName kind -NotePropertyValue $alertRule.kind -Force
-        $connectorBody | Add-Member -NotePropertyName etag -NotePropertyValue $alertRule.etag -Force		
+        $alertBody = @{}
+		$alertBody | Add-Member -NotePropertyName kind -NotePropertyValue $alertRule.kind -Force
+        $alertBody | Add-Member -NotePropertyName etag -NotePropertyValue $alertRule.etag -Force		
         
 		$props = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        IF ($alertRule.kind -eq "MicrosoftSecurityIncidentCreation") {        
         $props.Add("productFilter", $alertRule.properties.productFilter)
-        $props.Add("displayName", $alertRule.properties.displayName.Replace("(AUTO DISABLED)","")
+        $props.Add("displayName", $alertRule.properties.displayName)
         $props.Add("enabled", $true)
-        $props.Add("alertRuleTemplateName", $alertRule.properties.alertRuleTemplateName)
-        $connectorBody | Add-Member -NotePropertyName properties -NotePropertyValue $props		    
+        }
+        else {
+            $props.Add("productFilter", $alertRule.properties.productFilter)
+            $props.Add("alertRuleTemplateName", $alertRule.properties.alertRuleTemplateName)
+            $props.Add("enabled", $true)
+        }
+        $alertBody | Add-Member -NotePropertyName properties -NotePropertyValue $props		    
         
-        $connectorBody = ($connectorBody | ConvertTo-Json -Depth 3)        
+        $alertBody = ($alertBody | ConvertTo-Json -Depth 3)        
         
         $ruleId = $alertRule.name
         $UpdateAlertUri = "https://management.azure.com/subscriptions/$SubscriptionId/resourceGroups/${ResourceGroup}/providers/Microsoft.OperationalInsights/workspaces/${Workspace}/providers/Microsoft.SecurityInsights/alertRules/${ruleId}?api-version=2020-01-01"
         
         
-        $result = Invoke-WebRequest -Method PUT -Headers $headerParams -Uri $UpdateAlertUri -Body $connectorBody -ContentType application/json
+        $result = Invoke-WebRequest -Method PUT -Headers $headerParams -Uri $UpdateAlertUri -Body $alertBody -ContentType application/json
 
         Write-Host $result.StatusCode
     }
