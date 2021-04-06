@@ -70,9 +70,10 @@ foreach ($alertRule in $alertRules.value){
         $alertBody | Add-Member -NotePropertyName etag -NotePropertyValue $alertRule.etag -Force		
         
 		$props = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        IF ($alertRule.kind -eq "MicrosoftSecurityIncidentCreation") {        
+        IF ($alertRule.kind -eq "MicrosoftSecurityIncidentCreation") {
+		$alertDisplayName = $alertRule.properties.displayName.Replace("(AUTO DISABLED)","")
         $props.Add("productFilter", $alertRule.properties.productFilter)
-        $props.Add("displayName", $alertRule.properties.displayName)
+        $props.Add("displayName", $alertDisplayName)
         $props.Add("enabled", $true)
         }
         else {
